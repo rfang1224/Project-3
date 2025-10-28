@@ -1,4 +1,5 @@
 package project3;
+
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.regex.PatternSyntaxException;
@@ -22,10 +23,7 @@ import java.util.Iterator;
  *
  */
 public class Decode {
-    
-
     public static void main(String[] args) {
-
         Scanner in = new Scanner(System.in);
 
         //get sequence and decoding key from the user
@@ -75,31 +73,40 @@ public class Decode {
      * is either 'F' or 'B'
      */
     public static void decode (MDeque<Integer> list , String decodeKey) throws NoSuchElementException {
+        //loops through each character of the decodeKey
         for(int i = 0; i < decodeKey.length(); i++){
             if(list.size() == 0 && (decodeKey.charAt(i) == 'F' || decodeKey.charAt(i) == 'B')){
                 throw new NoSuchElementException("MDeque is empty");
             }
+            //if character is F then pop the front
             if(decodeKey.charAt(i) == 'F'){
                 list.popFront();
             }
+
+            //if character is B then pop the back
             else if(decodeKey.charAt(i) == 'B'){
                 list.popBack();
             }
+
+            //if character is R then reverse the lsit
             else if(decodeKey.charAt(i) == 'R'){
                 MDeque<Integer> revList = new MDeque<>();
 
                 Iterator<Integer> rev = list.reverseIterator();
 
+                //creates a new MDeque with the values in reverse
                 while(rev.hasNext()){
                     revList.pushBack(rev.next());
                 }
 
                 Iterator<Integer> forward = revList.iterator();
 
+                //pops all nodes in the list
                 while(list.size() != 0){
                     list.popBack();
                 }
 
+                //pushes all nodes from the new MDeque to list
                 while(forward.hasNext()){
                     list.pushBack(forward.next());
                 }
@@ -116,6 +123,7 @@ public class Decode {
      */
     public static MDeque<Integer> parseSequence (String sequence ) throws IllegalArgumentException {
         MDeque<Integer> list = new MDeque<>();
+        //creates a new MDeque and pushes each character separated by a comma to the new MDeque
         try {
             String [] splitSequence = sequence.split(", ");
 
@@ -142,13 +150,16 @@ public class Decode {
      * @return {@code true} if decodeKey are valid, {@code false} otherwise
      */
     public static boolean isValid ( String decodeKey ) {
+        //if decodeKeys length is 0 then return true
         if(decodeKey.length() == 0){
             return true;
         }
+        //return the result of the isValid function called on decodeKey without the first character
         char firstChar = decodeKey.charAt(0);
         if(firstChar == 'F' || firstChar == 'B' || firstChar == 'R'){
             return isValid(decodeKey.substring(1));
         }
+        //return false if otherwise
         else{
             return false;
         }
